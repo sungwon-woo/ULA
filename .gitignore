@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+
+# Checkpoints & logs
+checkpoint/
+train_log/
+
+# Credentials & keys
+gs_key.json
+*.json.key
+*.pem
+
+# Rebuttal (internal)
+rebuttal/
+
+# Data (large files)
+*.tar
+*.tar.gz
+*.zip
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
