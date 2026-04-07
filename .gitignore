@@ -23,6 +23,7 @@ rebuttal/
 *.tar
 *.tar.gz
 *.zip
+data/index_list/*/original/
 
 # IDE
 .vscode/
