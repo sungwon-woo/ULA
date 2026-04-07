@@ -4,7 +4,7 @@ from utils import *
 import traceback
 
 MODEL_DIR=None
-DATA_DIR = 'data/'
+DATA_DIR = '/dataset'
 PROJECT='savc'
 
 def get_command_line_parser():
@@ -30,7 +30,7 @@ def get_command_line_parser():
     parser.add_argument('-decay', type=float, default=0.0005)
     parser.add_argument('-momentum', type=float, default=0.9)
     parser.add_argument('-gamma', type=float, default=0.1)
-    parser.add_argument('-temperature', type=int, default=16)
+    parser.add_argument('-temperature', type=int, default=4)
     parser.add_argument('-not_data_init', action='store_true', help='using average data embedding to init or not')
     parser.add_argument('-batch_size_base', type=int, default=128)
     parser.add_argument('-batch_size_new', type=int, default=0, help='set 0 will use all the availiable training image for new')
@@ -76,6 +76,22 @@ def get_command_line_parser():
     parser.add_argument('-seed', type=int, default=1)
     parser.add_argument('-debug', action='store_true')
     parser.add_argument('-incft', action='store_true', help='incrmental finetuning')
+
+    # hyperparmeter
+    parser.add_argument('-adj_tau', default='0.04')
+    parser.add_argument('-adj_lambda_base', default='0.4')
+    parser.add_argument('-adj_lambda_incr', default='0.06')
+    parser.add_argument('-adj_max_shift', default='0.06')
+    parser.add_argument('-adj_T_base', default='0.03')
+    parser.add_argument('-adj_entropy_alpha', default='0.1')
+    parser.add_argument('-adj_entropy_thresh', default='0.06')
+    parser.add_argument('-adj_enable_caseB', action='store_true', help='Enable case B adjustment')
+    parser.add_argument(
+        '-log_dir',
+        dest='save_path',  
+        type=str,
+        default='./train_log'
+    )
 
     return parser
 

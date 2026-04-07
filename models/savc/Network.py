@@ -6,6 +6,7 @@ import torch.nn.functional as F
 import numpy as np
 from models.resnet18_encoder import *
 from models.resnet20_cifar import *
+import logging
 
 class MYNET(nn.Module):
 
@@ -85,6 +86,7 @@ class MYNET(nn.Module):
         if 'cos' in self.mode:
             x = F.linear(F.normalize(x, p=2, dim=-1), F.normalize(self.fc.weight, p=2, dim=-1))
             x = self.args.temperature * x
+            #logging.info("1")
 
         elif 'dot' in self.mode:
             x = self.fc(x)
@@ -207,3 +209,5 @@ class MYNET(nn.Module):
             return F.linear(x,fc)
         elif 'cos' in self.args.new_mode:
             return self.args.temperature * F.linear(F.normalize(x, p=2, dim=-1), F.normalize(fc, p=2, dim=-1))
+            #logging.info("2")
+            #return F.linear(F.normalize(x, p=2, dim=-1), F.normalize(fc, p=2, dim=-1))
