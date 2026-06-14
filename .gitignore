@@ -16,6 +16,9 @@ gs_key.json
 *.json.key
 *.pem
 
+# Local-only scripts
+auto_shell.py
+
 # Rebuttal (internal)
 rebuttal/
 

@@ -100,105 +100,6 @@ def save_list_to_txt(name, input_list):
     f.close()
 
 
-# def confmatrix(
-#     logits,
-#     label,
-#     save_dir,
-#     class_names=None,
-#     normalize=True,
-#     wanted_font="FreeSerif",
-#     fallback_font="DejaVu Sans",
-#     suppress_font_warning=True,
-# ):
-#     """
-#     Args:
-#         logits (Tensor): [N, C]
-#         label  (Tensor): [N]
-#         save_dir (str): directory to save outputs (npy/csv/png)
-#         class_names (List[str] or None): names for classes; default "0..C-1"
-#         normalize (bool): True -> 'true' normalization (per-class accuracy)
-#         wanted_font (str): preferred font family (will be used only if installed)
-#         fallback_font (str): fallback when preferred font is not installed
-#         suppress_font_warning (bool): suppress 'findfont: ... not found' warnings
-
-#     Returns:
-#         cm (ndarray): (C, C) confusion matrix (normalized if normalize=True)
-#     """
-#     os.makedirs(save_dir, exist_ok=True)
-
-#     # --- Font handling: check availability instead of try/except ---
-#     available_fonts = {f.name for f in matplotlib.font_manager.fontManager.ttflist}
-#     if wanted_font in available_fonts:
-#         chosen_font = wanted_font
-#     else:
-#         chosen_font = fallback_font
-#         if suppress_font_warning:
-#             warnings.filterwarnings("ignore", message=f"findfont: Font family '{wanted_font}' not found.")
-
-#     matplotlib.rcParams.update({'font.family': chosen_font, 'font.size': 18})
-
-#     # --- Predictions to CPU numpy ---
-#     with torch.no_grad():
-#         pred = torch.argmax(logits, dim=1)
-
-#     y_true = label.detach().cpu().numpy()
-#     y_pred = pred.detach().cpu().numpy()
-
-#     # --- Classes / names ---
-#     num_classes = int(logits.shape[1])
-#     if class_names is None:
-#         class_names = [str(i) for i in range(num_classes)]
-
-#     # --- Confusion matrix ---
-#     norm_opt = 'true' if normalize else None
-#     labels_range = list(range(num_classes))
-#     cm = confusion_matrix(y_true, y_pred, labels=labels_range, normalize=norm_opt)
-
-#     # ===== Save: NPY =====
-#     #np.save(os.path.join(save_dir, 'confusion_matrix.npy'), cm)
-
-#     # ===== Save: CSV =====
-#     # csv_path = os.path.join(save_dir, 'confusion_matrix.csv')
-#     # with open(csv_path, 'w', encoding='utf-8') as f:
-#     #     f.write(',' + ','.join(class_names) + '\n')
-#     #     for i, row in enumerate(cm):
-#     #         f.write(f'{class_names[i]},' + ','.join(f'{v:.6f}' for v in row) + '\n')
-
-#     # ===== Save: PNG =====
-#     # 자동 크기 조절(클래스 많을 때 글자 겹침 방지)
-#     fig_w = max(6, num_classes * 0.5)
-#     fig_h = max(5, num_classes * 0.5)
-#     fig, ax = plt.subplots(figsize=(fig_w, fig_h))
-
-#     im = ax.imshow(cm, interpolation='nearest', cmap='Blues')
-#     cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
-#     cbar.ax.set_ylabel('Proportion' if normalize else 'Count', rotation=270, labelpad=15)
-
-#     ax.set_title('Confusion Matrix' + (' (normalized)' if normalize else ''))
-#     ax.set_xlabel('Predicted label')
-#     ax.set_ylabel('True label')
-
-#     ax.set_xticks(np.arange(num_classes))
-#     ax.set_yticks(np.arange(num_classes))
-#     ax.set_xticklabels(class_names, rotation=45, ha='right')
-#     ax.set_yticklabels(class_names)
-
-#     # 각 셀에 값 표시
-#     fmt = '.2f' if normalize else 'd'
-#     thresh = cm.max() / 2.0 if cm.size > 0 else 0.5
-#     for i in range(num_classes):
-#         for j in range(num_classes):
-#             val = cm[i, j]
-#             ax.text(j, i, format(val, fmt),
-#                     ha='center', va='center',
-#                     color='white' if val > thresh else 'black')
-
-#     fig.tight_layout()
-#     #fig.savefig(os.path.join(save_dir, 'confusion_matrix.png'), dpi=200, bbox_inches='tight')
-#     plt.close(fig)
-
-#     return cm
-
 def confmatrix(logits,label,filename):
     
     font={'family':'DejaVu Sans','size':18}
@@ -294,7 +195,7 @@ import numpy as np
 def compute_gacc_session_style(all_acc, base_num, incr_num, alpha_points=11):
     """
     all_acc:
-      - session 0: [avg0]  (seen/unseen 없음)
+      - session 0: [avg0]  (no seen/unseen split)
       - session i>=1: [seen_i, unseen_i, avg_i]
     base_num: number of base classes
     incr_num: number of incremental classes introduced per incremental session (must be >0)
@@ -333,7 +234,7 @@ def compute_gacc_session_style(all_acc, base_num, incr_num, alpha_points=11):
         # number of effective incremental sessions up to i (excluding base session 0)
         num_incr_sessions_eff = i  # sessions 1..i
 
-        # Σ_j A_i^j 를 cohort 분해가 없으므로 unseen_i * num_incr_sessions_eff 로 근사
+        # Approximate Σ_j A_i^j as unseen_i * num_incr_sessions_eff (no cohort decomposition).
         sum_Aji = acc_u * num_incr_sessions_eff
 
         # gAcc_i(α) = (α*base_ratio*acc_b + Σ_j A_i^j) / (α*base_ratio + num_incr_sessions_eff)

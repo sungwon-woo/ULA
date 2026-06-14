@@ -1,7 +1,6 @@
 import argparse
 import importlib
 from utils import *
-import traceback
 
 MODEL_DIR=None
 DATA_DIR = '/dataset'
@@ -77,15 +76,23 @@ def get_command_line_parser():
     parser.add_argument('-debug', action='store_true')
     parser.add_argument('-incft', action='store_true', help='incrmental finetuning')
 
-    # hyperparmeter
-    parser.add_argument('-adj_tau', default='0.04')
-    parser.add_argument('-adj_lambda_base', default='0.4')
-    parser.add_argument('-adj_lambda_incr', default='0.06')
-    parser.add_argument('-adj_max_shift', default='0.06')
-    parser.add_argument('-adj_T_base', default='0.03')
-    parser.add_argument('-adj_entropy_alpha', default='0.1')
-    parser.add_argument('-adj_entropy_thresh', default='0.06')
-    parser.add_argument('-adj_enable_caseB', action='store_true', help='Enable case B adjustment')
+    # ULA hyperparameters
+    parser.add_argument('-adj_tau', type=float, default=0.04,
+                        help='top-2 margin gate threshold')
+    parser.add_argument('-adj_lambda_base', type=float, default=0.4,
+                        help='Case A adjustment strength')
+    parser.add_argument('-adj_lambda_incr', type=float, default=0.06,
+                        help='Case B adjustment strength (reserved)')
+    parser.add_argument('-adj_max_shift', type=float, default=0.06,
+                        help='maximum logit shift per sample (reserved)')
+    parser.add_argument('-adj_T_base', type=float, default=0.25,
+                        help='softmax temperature for base-only entropy')
+    parser.add_argument('-adj_entropy_alpha', type=float, default=8.0,
+                        help='sigmoid slope of entropy gate')
+    parser.add_argument('-adj_entropy_thresh', type=float, default=0.06,
+                        help='sigmoid center of entropy gate')
+    parser.add_argument('-adj_enable_caseB', action='store_true',
+                        help='Enable Case B adjustment (reserved)')
     parser.add_argument(
         '-log_dir',
         dest='save_path',  
