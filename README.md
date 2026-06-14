@@ -1,7 +1,7 @@
 # ULA_FSCIL
 
-Inference-time **Adaptive Logit Adjustment ** built on top of the SAVC
-backbone for Few-Shot Class-Incremental Learning (FSCIL). ULA softly shifts
+Inference-time Adaptive Logit Adjustment built on top of the SAVC
+backbone for Few-Shot Class-Incremental Learning (FSCIL). ULA shifts
 probability mass from a base top-1 class to an incremental top-2 class when the
 top-2 margin is small and the base-only entropy is high, without retraining the
 backbone.
@@ -76,11 +76,10 @@ stdout are, in order:
 ## Citation
 
 ```bibtex
-@inproceedings{song2023learning,
+@inproceedings{woo2026training,
   title={Training-Free Uncertainty-guided Logit Adjustment for Few-Shot Class-Incremental Learning},
   author={Sungwon Woo and Dongjun Hwang and Shiwon Kim and Junsuk Choe and Jongho Nang},
-  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition Findings},
-  pages={24183--24192},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
   year={2026}
 }
 ```
